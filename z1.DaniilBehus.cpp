@@ -17,3 +17,12 @@ char SVG_KRESLI_SPLINE(FILE *file, float x[], float y[], int n) {
     fprintf(file, "</svg>");
     return 1;
 	}
+    
+    //
+    int main() {
+    FILE *file = fopen("graph.svg", "w");
+    if (file == NULL) {
+        printf("Nepodarilo sa otvorit subor na zapis.\n");
+        return 1;
+    }
+}
