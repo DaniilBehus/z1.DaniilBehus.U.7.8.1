@@ -19,7 +19,7 @@ char SVG_KRESLI_SPLINE(FILE *file, float x[], float y[], int n) {
 	}
     
     //
-    int main() {
+int main() {
     FILE *file = fopen("graph.svg", "w");
     if (file == NULL) {
         printf("Nepodarilo sa otvorit subor na zapis.\n");
@@ -28,5 +28,16 @@ char SVG_KRESLI_SPLINE(FILE *file, float x[], float y[], int n) {
     //
     float x[] = {10, 30, 50, 70, 90};
     float y[] = {20, 40, 60, 80, 50};
-    int n = sizeof(x) / sizeof(x[0]);
-}
+    int n = sizeof(x) / sizeof(x[0]);  
+    //
+		char result = SVG_KRESLI_SPLINE(file, x, y, n);
+    if (!result) {
+        printf("Generovanie SVG kodu zlyhalo.\n");
+    }
+
+    fclose(file);
+
+    return 0;
+}  
+
+
