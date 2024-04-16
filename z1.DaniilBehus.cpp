@@ -19,18 +19,18 @@ char SVG_KRESLI_SPLINE(FILE *file, float x[], float y[], int n) {
     return 1;
 	}
     
-   
+   //4
   int main(){
     FILE *file = fopen("graph.svg", "w");
     if (file == NULL) {
         printf("Nepodarilo sa otvorit subor na zapis.\n");
         return 1;
     }
-    //4
+    //5
     float x[] = {10, 30, 50, 70, 90};
     float y[] = {20, 40, 60, 80, 50};
     int n = sizeof(x) / sizeof(x[0]);  
-    //5
+    //6
 		char result = SVG_KRESLI_SPLINE(file, x, y, n);
     if (!result) {
         printf("Generovanie SVG kodu zlyhalo.\n");
