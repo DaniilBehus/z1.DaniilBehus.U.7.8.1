@@ -35,13 +35,16 @@ char SVG_KRESLI_SPLINE(FILE *file, float x[], float y[], int n) {
     float x[n];
     float y[n];
     for (int i = 0; i < n; i++) {
-        x[i] = (float)rand()/(float)(RAND_MAX/100); 
-        y[i] = (float)rand()/(float)(RAND_MAX/100); 
+          x[i] = (float)rand() / (float)RAND_MAX * 100; 
+          y[i] = (float)rand() / (float)RAND_MAX * 100;
+          
     }
     //6
 		char result = SVG_KRESLI_SPLINE(file, x, y, n);
     if (!result) {
         printf("Generovanie SVG kodu zlyhalo.\n");
+        free(x); 
+        free(y);
     }
 
     fclose(file);

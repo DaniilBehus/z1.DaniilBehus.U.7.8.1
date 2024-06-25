@@ -4,16 +4,16 @@
 #include <errno.h>
 #include <math.h>
 
-// Funkcia na vytvorenie SVG kodu pre krivku (polyline)
+// Funkcia na generovanie SVG kodu pre krivku (polyline)
 char SVG_KRESLI_SPLINE(FILE *file, const float *x, const float *y, int n) {
-    // Kontrola, ci je zadany dostatocny pocet bodov
+    // Kontrola, ci bolo zadane dostatocne mnozstvo bodov
     if (n < 2) {
-        fprintf(stderr, "Chyba: Je potrebne zadat aspon dva body zlomu.\n");
+        fprintf(stderr, "Chyba: Treba zadat aspon dva body.\n");
         return 0; 
     }
 
-    // Zaciatok SVG dokumentu s oblastou zobrazenia od -50 do +50 po oboch osiach
-    fprintf(file, "<svg xmlns=\"http://www.w3.org/5000/svg\" viewBox=\"-50 -50 100 100\">\n");
+    // Zacinok SVG dokumentu s oblastou zobrazenia od -50 do +50 po oboch osiach
+    fprintf(file, "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-50 -50 100 100\">\n");
 
     // Pridanie vodorovnej osi (OX) od -50 do +50 s oznaceniami kazdych 10 jednotiek
     {
@@ -35,10 +35,10 @@ char SVG_KRESLI_SPLINE(FILE *file, const float *x, const float *y, int n) {
         }
     }
 
-    // Zaciatok elementu polyline pre kreslenie ciary
+    // Zacinok elementu polyline na kreslenie ciar
     fprintf(file, "  <polyline points=\"");
 
-    // Cyklus pre pridanie suradnic bodov do krivky
+    // Cyklus na pridanie suradnic bodov do krivky
     {
         int i;
         for (i = 0; i < n; i++) {
@@ -49,7 +49,6 @@ char SVG_KRESLI_SPLINE(FILE *file, const float *x, const float *y, int n) {
             fprintf(file, "%.2f,%.2f ", clamped_x, -clamped_y); // -clamped_y transformuje y suradnicu do SVG suradnice
         }
     }
-
 
     // Ukoncenie elementu polyline
     fprintf(file, "\" fill=\"none\" stroke=\"red\" />\n");
@@ -62,7 +61,7 @@ char SVG_KRESLI_SPLINE(FILE *file, const float *x, const float *y, int n) {
 
 // Hlavna funkcia
 int main() {
-    // Otvorenie suboru graph.svg na zapis
+    // Otvaranie suboru graph.svg na zapis
     FILE *file = fopen("graph.svg", "w");
     if (file == NULL) {
         perror("Chyba pri otvarani suboru");
@@ -70,24 +69,23 @@ int main() {
     }
 
     // Inicializacia generatora nahodnych cisel
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
 
     // Pocet bodov pre krivku
     int n = 100;
 
-    // Dynamicka alokacia pamate pre polia suradnic
+    // Dynamicke alokovanie pamate pre polia suradnic
     float *x = (float*)malloc(n * sizeof(float));
     float *y = (float*)malloc(n * sizeof(float));
 
-    // Kontrola, ci sa podarilo alokovat pamat
+    // Kontrola, ci sa pamat uspesne alokovala
     if (x == NULL || y == NULL) {
         fprintf(stderr, "Chyba: Nepodarilo sa alokovat pamat. (%s)\n", strerror(errno)); 
         fclose(file);
         return 1;
     }
 
-    // Cyklus pre generovanie nahodnych suradnic
-     // Nahodny vyber funkcie (od 1 do 3)
+    // Nahodny vyber funkcie (od 1 do 3)
     int func_choice = (rand() % 3) + 1;
 
     // Vybrane parametre funkcii
@@ -188,32 +186,18 @@ int main() {
             }
             break;
     }
-    
 
-    // Volanie funkcie na vytvorenie SVG kodu
+    // Volanie funkcie na generovanie SVG grafu
     char result = SVG_KRESLI_SPLINE(file, x, y, n);
     if (!result) {
-        fprintf(stderr, "Chyba generovania SVG kodu.\n"); // Vypis chyby generovania SVG
+        fprintf(stderr, "Chyba pri vytvarani SVG suboru.\n"); // Hlasenie o chybe pri vytvarani SVG
     }
 
-    // Uvolnenie alokovanej pamate
+    // Uvolnenie pamate
     free(x);
     free(y);
     fclose(file); // Zatvorenie suboru
 
     return 0;
 }
-
-
-//PS
-
-//Rozhodol som sa preformatovat ulohu z "CPP" na "C" a kvoli tomu som mal problemy.
-
-//¹1 Prvy nie je problem s chybovym vystupom a na tento ucel som pouzil "stderr" a "#include <errno.h>"
-
-//¹2 Namiesto pouzitia float x[n]; a float y[n];  Rozhodol som sa ho lepsie vyuzit na dynamicku alokaciu pamate pomocou malloc, kedze umozni pracu s poliami premenlivej dlzky.
-
-//¹3 Kvoli prechodu na format "C" prvky "for (i = 0; i < n; i++)" nechceli fungova bez "-std=c99" a rozhodol som sa jednoducho pridat "int i" v pred nimi
-
-
 
